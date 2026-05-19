@@ -31,14 +31,14 @@ export const useTestRunner = () => {
 
   const runTest = useCallback(async () => {
     abortTest();
-    if (!source?.domain || !editorRef) {
-      return;
-    }
 
+    if (!source?.domain || !editorRef) return;
     const code = editorRef.editor.getValue();
+    if (!code) return;
     const text = Editor.select.currentDraft(store.getState());
-    if (code === text) return; // no changes
-    store.dispatch(Editor.action.pushCodeChange(code));
+    if (code !== text) {
+      store.dispatch(Editor.action.pushCodeChange(code));
+    }
 
     try {
       setLogs([]);
